@@ -4,10 +4,11 @@ text="lovely. гватемала is gonna be free. and then my man. go on."
 is_next_word_uppercased=false
 string_builder=""
 
-IFS=' ' read -r -a sentences <<<"$text" # split string to an array
+IFS=' ' read -r -a words <<<"$text" # split string to an array
+words=($(printf "%s\n" "${words[@]}" | shuf))
 
-for ((i = 0; i < ${#sentences[@]}; i++)); do # define length of an array
-    cur_word=${sentences[$i]}
+for ((i = 0; i < ${#words[@]}; i++)); do # define length of an array
+    cur_word=${words[$i]}
     word_end="${cur_word: -1}" # get char ends with string
     is_end=false
     if [[ $word_end = "." || $word_end = "!" || $word_end = "?" ]]; then
@@ -15,7 +16,7 @@ for ((i = 0; i < ${#sentences[@]}; i++)); do # define length of an array
     fi
 
     # manage first word
-    if [[ $i = 0 && ! $is_end = true ]]; then
+    if [[ $i = 0 && $is_end = true ]]; then
         cur_word="${cur_word^}"
         is_next_word_uppercased=true
     elif [[ $i = 0 && $is_end = false ]]; then
