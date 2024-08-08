@@ -69,7 +69,7 @@ func buildString(text_words []string, text_length int) string {
 		if len(word) == 0 {
 			continue
 		} else if len(word) == 1 {
-			text_buffer.WriteString(string(strings.ToUpper(word)[0]) + " ")
+			text_buffer.WriteString(string(strings.ToUpper(word)[0:1]) + " ")
 			continue
 		}
 		word_end := word[len(word)-1]
@@ -78,7 +78,7 @@ func buildString(text_words []string, text_length int) string {
 			text_buffer.WriteString(word + " ")
 		} else if is_uppercase_next_word_first_letter || i == 0 {
 			is_uppercase_next_word_first_letter = false
-			uppercased_str := strings.ToUpper(string(word[0])) + word[1:]
+			uppercased_str := strings.ToUpper(string(word[0:1])) + word[1:]
 			text_buffer.WriteString(uppercased_str + " ")
 		} else {
 			text_buffer.WriteString(word + " ")
