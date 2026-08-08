@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # TODO make full compatibility by automatically download repo and model on new system
+
 OUT="$HOME/tmp/voice.wav"
 TRANSCRIBER="$HOME/Projects/voice-to-text/main.py"
 VENV="$HOME/Projects/voice-to-text/bin/activate"
@@ -30,8 +31,18 @@ cleanup() {
   echo "Transcribing..." >&2
 
   source "$VENV"
-  python3 "$TRANSCRIBER" "$OUT"
+
+  TEXT="$(python3 "$TRANSCRIBER" "$OUT")"
+
   deactivate
+
+  # Print exactly what Python returned.
+  printf '%s\n' "$TEXT"
+
+  # Copy exactly the same text to the Wayland clipboard.
+  printf '%s' "$TEXT" | wl-copy
+
+  echo "Text copied to clipboard." >&2
 }
 
 trap cleanup INT TERM
