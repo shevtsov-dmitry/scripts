@@ -9,30 +9,25 @@ VENV="$HOME/Projects/voice-to-text/bin/activate"
 mkdir -p "$HOME/tmp"
 rm -f "$OUT"
 
-echo "Recording... Press Ctrl+C to stop."
+echo "Recording..." >&2
 
 FFMPEG_PID=""
 
 cleanup() {
-  echo
-  echo "Stopping recording..."
-
-  # Disable the trap so we don't handle Ctrl+C again.
   trap - INT TERM
 
-  # ffmpeg already received SIGINT from Ctrl+C.
-  # Just wait for it to finish writing the WAV header/trailer.
+  echo "Stopping recording..." >&2
+
   if [[ -n "$FFMPEG_PID" ]]; then
     wait "$FFMPEG_PID" 2>/dev/null || true
   fi
 
   if [[ ! -s "$OUT" ]]; then
-    echo "Error: recording file was not created."
+    echo "ERROR: Recording file was not created." >&2
     exit 1
   fi
 
-  echo "Recording saved to: $OUT"
-  echo "Launching transcriber..."
+  echo "Transcribing..." >&2
 
   source "$VENV"
   python3 "$TRANSCRIBER" "$OUT"
