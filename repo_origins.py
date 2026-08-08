@@ -20,6 +20,7 @@ commands = f"""
 git remote remove origin
 git remote add origin http://localhost:3013/shd/{repo_name}.git
 git push --set-upstream origin main
+git remote remove github
 git remote add github git@github.com:shevtsov-dmitry/{repo_name}.git
 git push github
 """
