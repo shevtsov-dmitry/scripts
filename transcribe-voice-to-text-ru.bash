@@ -4,8 +4,8 @@ set -euo pipefail
 # TODO make full compatibility by automatically download repo and model on new system
 
 OUT="$HOME/tmp/voice.wav"
-TRANSCRIBER="$HOME/Projects/voice-to-text/main.py"
-VENV="$HOME/Projects/voice-to-text/bin/activate"
+TRANSCRIBER="$HOME/Projects/voice-to-text-ru/main.py"
+VENV="$HOME/Projects/voice-to-text-ru/bin/activate"
 
 mkdir -p "$HOME/tmp"
 rm -f "$OUT"

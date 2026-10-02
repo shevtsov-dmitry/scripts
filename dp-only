@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+CONFIG_FILE="$HOME/.config/hypr/config/monitors.lua"
+
+# Enable DP-1, Disable HDMI-A-1
+sed -i '/output = "DP-1"/,/disabled =/ s/disabled = true/disabled = false/' "$CONFIG_FILE"
+sed -i '/output = "HDMI-A-1"/,/disabled =/ s/disabled = false/disabled = true/' "$CONFIG_FILE"
+
+# Reload Hyprland config
+hyprctl reload
