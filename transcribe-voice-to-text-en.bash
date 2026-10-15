@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# TODO make full compatibility by automatically download repo and model on new system
-
 OUT="$HOME/tmp/voice.wav"
 TRANSCRIBER="$HOME/Projects/voice-to-text-en/main.py"
 VENV="$HOME/Projects/voice-to-text-en/bin/activate"
@@ -10,18 +8,25 @@ VENV="$HOME/Projects/voice-to-text-en/bin/activate"
 mkdir -p "$HOME/tmp"
 rm -f "$OUT"
 
-echo "Recording..." >&2
-
 FFMPEG_PID=""
+
+echo "Recording... Press Ctrl+C to stop." >&2
 
 cleanup() {
   trap - INT TERM
 
   echo "Stopping recording..." >&2
 
-  if [[ -n "$FFMPEG_PID" ]]; then
+  if [[ -n "$FFMPEG_PID" ]] && kill -0 "$FFMPEG_PID" 2>/dev/null; then
+    # FFmpeg is in its own session, so Ctrl+C did not reach it.
+    # Send it one graceful SIGINT now.
+    kill -INT "$FFMPEG_PID" 2>/dev/null || true
+
+    # Wait until FFmpeg has completely finalized the WAV.
     wait "$FFMPEG_PID" 2>/dev/null || true
   fi
+
+  FFMPEG_PID=""
 
   if [[ ! -s "$OUT" ]]; then
     echo "ERROR: Recording file was not created." >&2
@@ -36,10 +41,7 @@ cleanup() {
 
   deactivate
 
-  # Print exactly what Python returned.
   printf '%s\n' "$TEXT"
-
-  # Copy exactly the same text to the Wayland clipboard.
   printf '%s' "$TEXT" | wl-copy
 
   echo "Text copied to clipboard." >&2
@@ -47,13 +49,15 @@ cleanup() {
 
 trap cleanup INT TERM
 
-ffmpeg \
+# Optimized option for better voice recognition for the AI
+setsid ffmpeg \
   -hide_banner \
   -loglevel error \
   -f pulse \
   -i default \
-  -ar 16000 \
   -ac 1 \
+  -ar 16000 \
+  -af "highpass=f=70,lowpass=f=7600" \
   -c:a pcm_s16le \
   "$OUT" &
 
