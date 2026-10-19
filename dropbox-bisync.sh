@@ -8,7 +8,8 @@
 # Format: "LOCAL_PATH|REMOTE_PATH"
 PAIRS=(
   "/mnt/HDD/Documents/training journal|dropbox:training journal"
-  # "$HOME/Pictures/Projects|dropbox:Projects"
+  "/mnt/HDD/Documents/Speaking Practice (EN)|dropbox:Speaking Practice (EN)"
+  "/mnt/HDD/Documents/Books/My Thoughts|dropbox:Books/My Thoughts"
   # "$HOME/Notes|dropbox:Notes"
 )
 
