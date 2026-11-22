@@ -1,0 +1,19 @@
+# Ignore everything by default
+*
+
+# Allow .gitignore itself to be tracked
+!.gitignore
+
+# Un-ignore directories so Git can traverse into them
+!*/
+
+# Explicitly whitelist your source files and config
+!*.py
+!requirements.txt
+!pyproject.toml
+!README.md
+
+# Re-ignore specific folders even if they contain .py files
+venv/
+.venv/
+__pycache__/
